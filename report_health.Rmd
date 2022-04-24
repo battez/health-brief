@@ -1,0 +1,63 @@
+---
+title: "report_health"
+author: "Luke Barker"
+date: "23/04/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)    # includes readr & tibble
+library(lubridate)    # for dates
+library(stringr)      # useful string library
+
+## adjust columns to be more manageable:
+corrected_cols <- cols(
+  Entity = col_character(),
+  Code = col_character(),
+  Year = col_integer()
+)
+
+# import two datasets
+dbvhe  <- readr::read_csv("data/disease-burden-vs-health-expenditure-per-capita.csv", col_types=corrected_cols) 
+
+ndbrf  <- readr::read_csv("data/number-of-deaths-by-risk-factor.csv", col_types=corrected_cols)
+
+# remove cumbersome column names prefix, then the suffix
+ndbrf <- ndbrf %>% 
+  
+  rename_with(stringr::str_replace, pattern='Deaths - Cause: All causes - Risk: ', replacement="") %>%
+  rename_with(gsub, pattern=" - .*", replacement="")
+
+
+
+```
+```{r causes-death}
+
+```
+
+```{r causes-trends}
+
+```
+
+```{r smoking-alcohol}
+
+```
+
+```{r expenditures}
+
+```
+
+```{r subjective}
+
+```
+
+```{r conclusions}
+
+```
+
+
+
+
+
