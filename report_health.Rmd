@@ -34,6 +34,16 @@ ndbrf <- ndbrf %>%
 
 ```
 ```{r causes-death}
+causes_totals <- ndbrf %>%
+  # we are adding all years and treating it as globally (add all countries)
+  summarise(across(c(4:31) , sum)) %>%
+  pivot_longer(c(1:28), values_to="total") %>%
+  arrange(desc(total))
+
+# demonstrate better via a column plot of all casues of death
+ggplot(data=causes_totals, aes(x = reorder(name, -total), y=total )) +
+  geom_col() + 
+  coord_flip()
 
 ```
 
