@@ -36,14 +36,25 @@ ndbrf <- ndbrf %>%
 ```{r causes-death}
 causes_totals <- ndbrf %>%
   # we are adding all years and treating it as globally (add all countries)
+  #TODO: check NAs do not overly affect this?
   summarise(across(c(4:31) , sum)) %>%
   pivot_longer(c(1:28), values_to="total") %>%
   arrange(desc(total))
 
-# demonstrate better via a column plot of all casues of death
+# TODO:make this a kable table
+print(head(causes_totals, 3))
+
+# demonstrate better via a column plot of all deaths 
+## fix scales of big numbers
+library(scales)
 ggplot(data=causes_totals, aes(x = reorder(name, -total), y=total )) +
   geom_col() + 
-  coord_flip()
+  coord_flip() +
+  expand_limits(x = c(0, NA), y = c(0,NA)) +
+  scale_y_discrete(labels = scales::label_number_si()) +
+  theme(axis.text.y = element_text(face="bold", color="#993333", 
+                           size=10))
+#TODO numbers seem obscured on x axis
 
 ```
 
