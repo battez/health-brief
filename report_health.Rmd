@@ -11,6 +11,10 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)    # includes readr & tibble
 library(lubridate)    # for dates
 library(stringr)      # useful string library
+library(scales)       # scale control
+
+# base theme settings here:
+theme_set(theme_classic(base_size = 16))
 
 ## adjust columns to be more manageable:
 corrected_cols <- cols(
@@ -46,15 +50,20 @@ print(head(causes_totals, 3))
 
 # demonstrate better via a column plot of all deaths 
 ## fix scales of big numbers
-library(scales)
-ggplot(data=causes_totals, aes(x = reorder(name, -total), y=total )) +
-  geom_col() + 
-  coord_flip() +
-  expand_limits(x = c(0, NA), y = c(0,NA)) +
-  scale_y_discrete(labels = scales::label_number_si()) +
-  theme(axis.text.y = element_text(face="bold", color="#993333", 
-                           size=10))
-#TODO numbers seem obscured on x axis
+p<- ggplot(data=causes_totals, aes(x = reorder(name, -total), y=total )) +
+  geom_col(fill="steelblue") + 
+  coord_flip()  +
+  scale_y_continuous(labels=scales::comma, expand = c(0,0)) +
+  labs(x="Cause of death", y="Estimated total value", title="Estimated totals for all causes of death, globally, 1990-2019") +
+  theme(plot.title = element_text(face = "bold",
+                                  hjust=0.5,
+                                  color="#555555"),
+        plot.title.position = "plot",
+        axis.title.x= element_text(color="#775555"),
+        axis.title.y= element_text(color="#775555")
+        )
+  
+
 
 ```
 
