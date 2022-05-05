@@ -50,7 +50,7 @@ print(head(causes_totals, 3))
 
 # demonstrate better via a column plot of all deaths 
 ## fix scales of big numbers
-p<- ggplot(data=causes_totals, aes(x = reorder(name, -total), y=total )) +
+p <- ggplot(data=causes_totals, aes(x = reorder(name, -total), y=total )) +
   geom_col(fill="steelblue") + 
   coord_flip()  +
   scale_y_continuous(labels=scales::comma, expand = c(0,0)) +
@@ -68,6 +68,17 @@ p<- ggplot(data=causes_totals, aes(x = reorder(name, -total), y=total )) +
 ```
 
 ```{r causes-trends}
+
+# multi line graph?
+causes_trends <- ndbrf %>% 
+  group_by(Year) %>% 
+  summarise(across(c(3:30) , sum)) %>%
+  pivot_longer(c(2: 29), values_to="total") %>%
+  ggplot(aes(x=Year, y=total, fill=name)) +
+  geom_line()
+  
+causes_trends
+
 
 ```
 
