@@ -9,5 +9,5 @@ https://psyteachr.github.io/ads-v1/index.html
 ## Technical brief 1 - Health Data 
 My post-course attempt at health assessment of ADS R course
  
-This was the first option for assessment (I submitted second option, a twitter dataset). [This technical brief option](/doc/Technical Brief 2.pdf) was for health data. For consolidating learning I here attempt this assessment. 
+This was the first option for assessment (I submitted second option, a twitter dataset). [This technical brief option](doc/Technical brief 1.pdf) was for health data. For consolidating learning I here attempt this assessment. 
  
