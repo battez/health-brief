@@ -14,7 +14,7 @@ library(stringr)      # useful string library
 library(scales)       # scale control
 
 # base theme settings here:
-theme_set(theme_classic(base_size = 16))
+theme_set(theme_bw())
 
 ## adjust columns to be more manageable:
 corrected_cols <- cols(
@@ -74,14 +74,22 @@ p <- ggplot(data=causes_totals, aes(x = reorder(name, -total), y=total )) +
 
 causes_trends <- ndbrf %>% 
   group_by(Year) %>% 
-  summarise(across(c(3:30) , sum)) %>%
+  summarise(across(c(3:30), sum)) %>%
   pivot_longer(c(2: 29), values_to="total") %>%
-  ggplot(aes(x=Year, y=total, color=name)) +
-  scale_y_continuous(labels=scales::comma, expand = c(0,0)) +
-  geom_point(show.legend=FALSE) +
-  geom_line(show.legend=FALSE)
-  
-causes_trends
+  ggplot(aes(x=Year, y=total)) +
+  facet_wrap(~ name, ncol=4) +
+  geom_area(colour="orange", fill="orange", 
+            show.legend=FALSE) +
+  scale_y_continuous(labels=scales::label_number(unit = "M", scale = 1e-6)) +
+  labs(title="Global trends: cause of death 1990-2020", 
+    y="No. Deaths (millions)")
+
+# output plot, make grid look better, and hack the facet grid font label size & grid spacing 
+causes_trends + theme(
+  strip.text.x=element_text(size=10), 
+  panel.margin=unit(.5, "lines"),
+  axis.text.y=element_text(size=9)
+  )
 
 
 ```
