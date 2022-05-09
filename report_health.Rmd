@@ -39,14 +39,19 @@ ndbrf <- ndbrf %>%
 ```
 ```{r causes-death}
 causes_totals <- ndbrf %>%
-  # we are adding all years and treating it as globally (add all countries)
-  #TODO: check NAs do not overly affect this?
+  # we are adding all years and treating it as globally (add all countries only)
+  # filter so just the countries, i.e. ones with ISO code 
+  filter(!is.na(Code)) %>%
   summarise(across(c(4:31) , sum)) %>%
   pivot_longer(c(1:28), values_to="total") %>%
   arrange(desc(total))
 
+
+print(causes_totals)
+
+  
 # TODO:make this a kable table
-print(head(causes_totals, 3))
+head(causes_totals, 5)
 
 # demonstrate better via a column plot of all deaths 
 ## fix scales of big numbers
@@ -54,7 +59,7 @@ p <- ggplot(data=causes_totals, aes(x = reorder(name, -total), y=total )) +
   geom_col(fill="steelblue") + 
   coord_flip()  +
   scale_y_continuous(labels=scales::comma, expand = c(0,0)) +
-  labs(x="Cause of death", y="Estimated total value", title="Estimated totals for all causes of death, globally, 1990-2019") +
+  labs(x="Death\'s risk factor", y="Estimated total value", title="Estimated totals for deaths attributable to risk factor, globally, 1990-2019") +
   theme(plot.title = element_text(face = "bold",
                                   hjust=0.5,
                                   color="#555555"),
@@ -73,6 +78,7 @@ p <- ggplot(data=causes_totals, aes(x = reorder(name, -total), y=total )) +
 # https://stackoverflow.com/questions/53125393/ggplot-label-the-top-n-lines
 
 causes_trends <- ndbrf %>% 
+  filter(!is.na(Code)) %>%
   group_by(Year) %>% 
   summarise(across(c(3:30), sum)) %>%
   pivot_longer(c(2: 29), values_to="total") %>%
@@ -80,9 +86,9 @@ causes_trends <- ndbrf %>%
   facet_wrap(~ name, ncol=4) +
   geom_area(colour="orange", fill="orange", 
             show.legend=FALSE) +
-  scale_y_continuous(labels=scales::label_number(unit = "M", scale = 1e-6)) +
-  labs(title="Global trends: cause of death 1990-2020", 
-    y="No. Deaths (millions)")
+  scale_y_continuous(labels=scales::label_number(unit = "M", scale = 1e-6, accuracy=1)) +
+  labs(title="Global trends: deaths attributable to risk factors 1990-2020", 
+    y="No. Deaths attributable to risk factor (millions)")
 
 # output plot, make grid look better, and hack the facet grid font label size & grid spacing 
 causes_trends + theme(
@@ -90,6 +96,8 @@ causes_trends + theme(
   panel.margin=unit(.5, "lines"),
   axis.text.y=element_text(size=9)
   )
+# TODO:make this a kable table
+head(causes_trends, 2)
 
 
 ```
